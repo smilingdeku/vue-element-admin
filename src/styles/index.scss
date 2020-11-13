@@ -172,12 +172,15 @@ aside {
 }
 
 .filter-container {
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 
   .filter-item {
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: 10px;
+    margin: 10px;
+  }
+  .filter-button-group {
+    margin: 10px;
   }
 }
 
