@@ -233,7 +233,7 @@ export default {
         // border-color: #495060;
         &::before {
           content: '';
-          background: #1890FF;
+          background: #11A983;
           display: inline-block;
           width: 8px;
           height: 8px;

@@ -1,6 +1,6 @@
 <template>
   <el-container class="table-container">
-    <el-header v-if="$slots.row">
+    <el-header v-if="$slots.filter">
       <search-form
         ref="form"
         :label-width="labelWidth"
@@ -8,7 +8,7 @@
         @reset="$emit('reset')"
       >
         <template>
-          <slot name="row" /><!-- 搜索条件 & 按钮 -->
+          <slot name="filter" /><!-- 搜索条件 & 按钮 -->
         </template>
       </search-form>
     </el-header>
@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      tableHeight: '590px' // table表格高度
+      // tableHeight: '600px' // table表格高度
     }
   },
   methods: {
