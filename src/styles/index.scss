@@ -184,6 +184,18 @@ aside {
   }
 }
 
+.action-container {
+  .action-item {
+    margin: 10px;
+  }
+}
+
+.operate-container {
+  .operate-item {
+    margin-right: 10px;
+  }
+}
+
 //refine vue-multiselect plugin
 .multiselect {
   line-height: 16px;

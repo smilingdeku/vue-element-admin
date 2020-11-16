@@ -15,6 +15,14 @@ export function getInfo() {
   })
 }
 
+export function page(params) {
+  return request({
+    url: '/sys/user/page',
+    method: 'get',
+    params: params
+  })
+}
+
 export function logout() {
   return request({
     url: '/sys/user/logout',
