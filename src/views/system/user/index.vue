@@ -63,6 +63,57 @@
         />
       </el-footer>
     </el-container>
+    <el-dialog :visible.sync="openEdit" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="form.username" :disabled="form.id" placeholder="请输入用户名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="!form.id" label="密码" prop="password">
+              <el-input v-model="form.password" type="password" placeholder="请输入密码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="=realName">
+              <el-input v-model="form.realName" placeholder="请输入姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="=email">
+              <el-input v-model="form.email" placeholder="请输入邮箱" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="=phone">
+              <el-input v-model="form.phone" placeholder="请输联系电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="=memo">
+              <el-input v-model="form.memo" placeholder="请输联系备注" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="item in statusList"
+                  :key="item.value"
+                  :label="item.value"
+                >{{ item.key }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer">
+        <el-button type="primary" small @click="submitForm">确 定</el-button>
+        <el-button small @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -94,7 +145,20 @@ export default {
         username: '',
         pageIndex: 1,
         pageSize: 10
-      }
+      },
+      openEdit: false,
+      form: {},
+      rules: {},
+      statusList: [
+        {
+          key: '启用',
+          value: 1
+        },
+        {
+          key: '禁用',
+          value: 0
+        }
+      ]
     }
   },
   computed: {},
@@ -112,7 +176,7 @@ export default {
 
         setTimeout(() => {
           this.loading = false
-        }, 1000)
+        }, 1500)
       })
     },
     query() {
@@ -126,10 +190,17 @@ export default {
       this.getList()
     },
     handleEdit(row) {
-      console.log(row)
+      this.openEdit = true
+      this.form = row
     },
     handleDelete(row) {
       console.log(row)
+    },
+    submitForm() {
+
+    },
+    cancel() {
+      this.openEdit = false
     },
     transStatus(val) {
       switch (val) {
