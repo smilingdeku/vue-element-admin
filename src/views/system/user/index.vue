@@ -5,10 +5,10 @@
         <div class="filter-container" style="flex: 1;">
           <el-form>
             <el-form-item class="filter-item">
-              <el-input placeholder="请输入内容" clearable />
+              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
             </el-form-item>
-            <el-button size="small" type="primary">查 询</el-button>
-            <el-button size="small" @click="$emit('reset')">重 置</el-button>
+            <el-button size="small" type="primary" @click="query">查 询</el-button>
+            <el-button size="small" @click="reset">重 置</el-button>
           </el-form>
         </div>
         <div class="action-container">
@@ -56,8 +56,6 @@
       <el-footer>
         <pagination
           v-show="total > 0"
-          style="text-align: right; margin-top: 10px"
-          small
           :total="total"
           :page.sync="queryParams.pageIndex"
           :limit.sync="queryParams.pageSize"
@@ -93,6 +91,7 @@ export default {
       list: [],
       total: 0,
       queryParams: {
+        username: '',
         pageIndex: 1,
         pageSize: 10
       }
@@ -116,6 +115,16 @@ export default {
         }, 1000)
       })
     },
+    query() {
+      this.getList()
+    },
+    reset() {
+      this.queryParams = {
+        pageIndex: 1,
+        pageSize: 10
+      }
+      this.getList()
+    },
     handleEdit(row) {
       console.log(row)
     },
@@ -127,7 +136,7 @@ export default {
         case 0:
           return '禁用'
         case 1:
-          return '启用'
+          return '有效'
       }
     }
   }
