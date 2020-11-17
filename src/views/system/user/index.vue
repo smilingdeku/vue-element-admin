@@ -27,24 +27,24 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column :reserve-selection="true" type="selection" width="50" />
-          <el-table-column prop="username" label="用户名" show-overflow-tooltip />
-          <el-table-column prop="realName" label="姓名" show-overflow-tooltip />
-          <el-table-column prop="avatar" label="头像" show-overflow-tooltip>
+          <el-table-column align="center" prop="username" label="用户名" show-overflow-tooltip />
+          <el-table-column align="center" prop="realName" label="姓名" show-overflow-tooltip />
+          <el-table-column align="center" prop="avatar" label="头像" show-overflow-tooltip>
             <template slot-scope="{row}">
               <el-avatar shape="square" :src="row.avatar" />
             </template>
           </el-table-column>
-          <el-table-column prop="email" label="邮箱" show-overflow-tooltip />
-          <el-table-column prop="phone" label="联系电话" show-overflow-tooltip />
-          <el-table-column prop="memo" label="备注" show-overflow-tooltip />
-          <el-table-column prop="status" label="状态">
+          <el-table-column align="center" prop="email" label="邮箱" show-overflow-tooltip />
+          <el-table-column align="center" prop="phone" label="联系电话" show-overflow-tooltip />
+          <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
+          <el-table-column align="center" prop="status" label="状态">
             <template slot-scope="{row}">
               <el-tag :type="row.status | statusFilter">
                 {{ transStatus(row.status) }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <div class="operate-container">
                 <el-link v-permission="['system:user:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
