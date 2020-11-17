@@ -1,7 +1,6 @@
 import store from '@/store'
 
 function checkPermission(el, binding) {
-  debugger
   const { value } = binding
   const userPermissions = store.getters && store.getters.permissions
 
