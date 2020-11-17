@@ -36,3 +36,11 @@ export function del(ids) {
     method: 'delete'
   })
 }
+
+export function save(data) {
+  return request({
+    url: `/sys/user`,
+    method: 'post',
+    data
+  })
+}

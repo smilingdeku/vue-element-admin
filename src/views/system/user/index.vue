@@ -12,8 +12,8 @@
           </el-form>
         </div>
         <div class="action-container">
-          <el-button class="action-item" size="small" type="primary">新 建</el-button>
-          <el-button v-permission="['system:user:delete']" class="action-item" size="small" type="danger">删 除</el-button>
+          <el-button class="action-item" size="small" type="primary" @click="handleNew">新 建</el-button>
+          <el-button v-permission="['system:user:delete']" class="action-item" size="small" type="danger" @click="handleBatchDelete">删 除</el-button>
         </div>
       </el-header>
       <el-main>
@@ -64,7 +64,7 @@
         />
       </el-footer>
     </el-container>
-    <el-dialog :visible.sync="openEdit" width="600px" append-to-body>
+    <el-dialog :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { page, del } from '@/api/system/user'
+import { page, del, save } from '@/api/system/user'
 import Pagination from '@/components/Pagination'
 import permission from '@/directive/permission/index.js'
 
@@ -150,9 +150,22 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      openEdit: false,
-      form: {},
-      rules: {},
+      open: false,
+      form: {
+        id: undefined,
+        username: '',
+        password: '',
+        realName: '',
+        email: '',
+        phone: '',
+        memo: '',
+        status: 1
+      },
+      rules: {
+        username: [
+          { required: true, message: '用户名称不能为空', trigger: 'blur' }
+        ]
+      },
       statusList: [
         {
           key: '启用',
@@ -193,9 +206,38 @@ export default {
       }
       this.getList()
     },
+    resetForm() {
+      return {
+        id: undefined,
+        username: '',
+        password: '',
+        realName: '',
+        email: '',
+        phone: '',
+        memo: '',
+        status: 1
+      }
+    },
+    handleNew() {
+      if (this.$refs['form']) {
+        this.$refs['form'].resetFields()
+      }
+      this.form = this.resetForm()
+      this.open = true
+    },
+    handleBatchDelete() {
+      del(this.ids).then(res => {
+        if (res.code === 0) {
+          this.getList()
+        }
+      })
+    },
     handleEdit(row) {
-      this.openEdit = true
+      if (this.$refs['form']) {
+        this.$refs['form'].resetFields()
+      }
       this.form = row
+      this.open = true
     },
     handleDelete(row) {
       del(row.id).then(res => {
@@ -208,10 +250,18 @@ export default {
       this.ids = selection.map(item => item.id)
     },
     submitForm() {
-
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          save(this.form).then(res => {
+            if (res.code === 0) {
+              this.open = false
+            }
+          })
+        }
+      })
     },
     cancel() {
-      this.openEdit = false
+      this.open = false
     },
     transStatus(val) {
       switch (val) {
