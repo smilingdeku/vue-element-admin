@@ -12,7 +12,7 @@
           </el-form>
         </div>
         <div class="action-container">
-          <el-button class="action-item" size="small" type="primary" @click="handleNew">新 建</el-button>
+          <el-button v-permission="['system:user:add']" class="action-item" size="small" type="primary" @click="handleNew">新 建</el-button>
           <el-button v-permission="['system:user:delete']" class="action-item" size="small" type="danger" @click="handleBatchDelete">删 除</el-button>
         </div>
       </el-header>
@@ -47,7 +47,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div class="operate-container">
-                <el-link class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
+                <el-link v-permission="['system:user:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
                 <el-link v-permission="['system:user:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
               </div>
             </template>
