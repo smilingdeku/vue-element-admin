@@ -6,16 +6,17 @@ import store from '@/store'
  * @example see @/views/permission/directive.vue
  */
 export default function checkPermission(value) {
+  debugger
   if (value && value instanceof Array && value.length > 0) {
-    const roles = store.getters && store.getters.roles
-    const permissionRoles = value
+    const userPermissions = store.getters && store.getters.permissions
+    const permissions = value
 
-    const hasPermission = roles.some(role => {
-      return permissionRoles.includes(role)
+    const hasPermission = userPermissions.some(permission => {
+      return permissions.includes(permission)
     })
     return hasPermission
   } else {
-    console.error(`need roles! Like v-permission="['admin','editor']"`)
+    console.error(`need permissions! Like v-permission="['admin','editor']"`)
     return false
   }
 }

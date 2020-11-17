@@ -13,7 +13,7 @@
         </div>
         <div class="action-container">
           <el-button class="action-item" size="small" type="primary">新 建</el-button>
-          <el-button class="action-item" size="small" type="danger">删 除</el-button>
+          <el-button v-permission="['system:user:delete']" class="action-item" size="small" type="danger">删 除</el-button>
         </div>
       </el-header>
       <el-main>
@@ -24,6 +24,7 @@
           :data="list"
           :header-cell-style="{ fontWeight: 'bold' }"
           highlight-current-row
+          @selection-change="handleSelectionChange"
         >
           <el-table-column :reserve-selection="true" type="selection" width="50" />
           <el-table-column prop="username" label="用户名" show-overflow-tooltip />
@@ -47,7 +48,7 @@
             <template slot-scope="scope">
               <div class="operate-container">
                 <el-link class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
-                <el-link class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
+                <el-link v-permission="['system:user:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
               </div>
             </template>
           </el-table-column>
@@ -68,7 +69,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="form.username" :disabled="form.id" placeholder="请输入用户名" />
+              <el-input v-model="form.username" :disabled="form.id !== undefined" placeholder="请输入用户名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -118,13 +119,15 @@
 </template>
 
 <script>
-import { page } from '@/api/user'
+import { page, del } from '@/api/system/user'
 import Pagination from '@/components/Pagination'
+import permission from '@/directive/permission/index.js'
 
 export default {
   components: {
     Pagination
   },
+  directives: { permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -139,6 +142,7 @@ export default {
     return {
       loading: false,
       tableKey: 0,
+      ids: [],
       list: [],
       total: 0,
       queryParams: {
@@ -194,7 +198,14 @@ export default {
       this.form = row
     },
     handleDelete(row) {
-      console.log(row)
+      del(row.id).then(res => {
+        if (res.code === 0) {
+          this.getList()
+        }
+      })
+    },
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
     },
     submitForm() {
 
