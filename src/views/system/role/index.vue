@@ -12,14 +12,14 @@
           </el-form>
         </div>
         <div class="action-container">
-          <el-button class="action-item" size="small" type="primary" @click="handleNew">新 建</el-button>
+          <el-button class="action-item" size="small" type="primary" @click="handleAdd">添 加</el-button>
           <el-button class="action-item" size="small" type="danger" @click="handleBatchDelete">删 除</el-button>
         </div>
       </el-header>
-      <el-mian>
+      <el-main>
         <el-table
           :key="tableKey"
-          :table-loading="loading"
+          v-loading="loading"
           :row-key="row => row.id"
           :data="list"
           :header-cell-style="{ fontWeight: 'bold' }"
@@ -30,16 +30,15 @@
           <el-table-column align="center" prop="name" label="角色名" show-overflow-tooltip />
           <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
           <el-table-column align="center" label="操作">
-            <!-- <template slot-scope="scope"> -->
-            <template>
+            <template slot-scope="scope">
               <div class="operate-container">
-                <el-link class="operate-item" icon="el-icon-edit">编辑</el-link>
+                <el-link class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
                 <el-link class="operate-item" icon="el-icon-delete">删除</el-link>
               </div>
             </template>
           </el-table-column>
         </el-table>
-      </el-mian>
+      </el-main>
       <el-footer>
         <pagination
           v-show="total > 0"
@@ -49,16 +48,53 @@
           @pagination="getList"
         />
       </el-footer>
-
     </el-container>
+    <el-dialog :visible.sync="dialogVisible" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="60px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="角色名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入角色名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="memo">
+              <el-input v-model="form.memo" placeholder="请输入备注" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="权限">
+              <el-tree
+                ref="tree"
+                :data="tree"
+                :props="defaultProps"
+                :default-expanded-keys="checkedNodes"
+                :default-checked-keys="checkedNodes"
+                check-strictly
+                show-checkbox
+                node-key="id"
+                class="permission-tree"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer">
+        <el-button type="primary" small @click="submitForm">确 定</el-button>
+        <el-button small @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { page } from '@/api/system/role'
+import { page, getPermissions, get } from '@/api/system/role'
+import Pagination from '@/components/Pagination'
 
 export default {
-  components: {},
+  components: {
+    Pagination
+  },
   props: {},
   data() {
     return {
@@ -71,7 +107,21 @@ export default {
         name: '',
         pageIndex: 1,
         pageSize: 10
-      }
+      },
+      dialogVisible: false,
+      isSave: true,
+      form: {
+        id: undefined,
+        name: '',
+        memo: ''
+      },
+      rules: {},
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
+      tree: [],
+      checkedNodes: []
     }
   },
   computed: {},
@@ -83,12 +133,13 @@ export default {
   },
   methods: {
     getList() {
+      this.loading = true
       page(this.queryParams).then(res => {
         this.list = res.data
         this.total = res.total
         setTimeout(() => {
           this.loading = false
-        }, 1500)
+        }, 1000)
       })
     },
     query() {
@@ -105,9 +156,68 @@ export default {
       }
       this.getList()
     },
-    handleNew() {},
+    resetForm() {
+      if (this.$refs['form']) {
+        this.$refs['form'].resetFields()
+      }
+      this.form = {
+        id: undefined,
+        name: '',
+        memo: ''
+      }
+      this.tree = []
+      this.checkedNodes = []
+    },
+    handleAdd() {
+      this.resetForm()
+      this.isSave = true
+      getPermissions(0).then(res => {
+        if (res.code === 0) {
+          this.tree = res.data
+          this.dialogVisible = true
+        }
+      })
+    },
     handleBatchDelete() {},
-    handleSelectionChange() {}
+    handleSelectionChange() {},
+    handleEdit(row) {
+      this.resetForm()
+      this.isSave = false
+      get(row.id).then(res => {
+        if (res.code === 0) {
+          this.form = res.data
+        }
+      })
+      getPermissions(row.id).then(res => {
+        if (res.code === 0) {
+          this.tree = res.data
+          this.findCheckedNodes(res.data)
+          this.dialogVisible = true
+        }
+      })
+    },
+    submitForm() {
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (!this.isSave) {
+            console.log(this.form)
+          }
+        }
+      })
+    },
+    cancel() {
+      this.dialogVisible = false
+    },
+    findCheckedNodes(tree) {
+      tree.forEach((item) => {
+        if (item.hasPermission) {
+          this.checkedNodes.push(item.id)
+        }
+        if (item.children) {
+          this.findCheckedNodes(item.children)
+        }
+      })
+    }
   }
 }
 </script>

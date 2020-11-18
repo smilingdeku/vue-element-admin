@@ -3,23 +3,23 @@
     <el-container>
       <el-header style="display: flex;">
         <div class="filter-container" style="flex: 1;">
-          <el-form>
+          <el-form ref="queryForm">
             <el-form-item class="filter-item">
               <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
             </el-form-item>
             <el-button size="small" type="primary" @click="query">查 询</el-button>
-            <el-button size="small" @click="reset">重 置</el-button>
+            <el-button size="small" @click="resetQueryForm">重 置</el-button>
           </el-form>
         </div>
         <div class="action-container">
-          <el-button v-permission="['system:user:add']" class="action-item" size="small" type="primary" @click="handleNew">新 建</el-button>
+          <el-button v-permission="['system:user:add']" class="action-item" size="small" type="primary" @click="handleAdd">添 加</el-button>
           <el-button v-permission="['system:user:delete']" class="action-item" size="small" type="danger" @click="handleBatchDelete">删 除</el-button>
         </div>
       </el-header>
       <el-main>
         <el-table
           :key="tableKey"
-          :table-loading="loading"
+          v-loading="loading"
           :row-key="row => row.id"
           :data="list"
           :header-cell-style="{ fontWeight: 'bold' }"
@@ -64,7 +64,7 @@
         />
       </el-footer>
     </el-container>
-    <el-dialog :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :visible.sync="dialogVisible" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { page, del, save } from '@/api/system/user'
+import { page, del, save, get } from '@/api/system/user'
 import Pagination from '@/components/Pagination'
 import permission from '@/directive/permission/index.js'
 
@@ -150,7 +150,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      open: false,
+      dialogVisible: false,
       form: {
         id: undefined,
         username: '',
@@ -193,13 +193,16 @@ export default {
 
         setTimeout(() => {
           this.loading = false
-        }, 1500)
+        }, 1000)
       })
     },
     query() {
       this.getList()
     },
-    reset() {
+    resetQueryForm() {
+      if (this.$refs['queryForm']) {
+        this.$refs['queryForm'].resetFields()
+      }
       this.queryParams = {
         pageIndex: 1,
         pageSize: 10
@@ -207,7 +210,10 @@ export default {
       this.getList()
     },
     resetForm() {
-      return {
+      if (this.$refs['form']) {
+        this.$refs['form'].resetFields()
+      }
+      this.form = {
         id: undefined,
         username: '',
         password: '',
@@ -218,12 +224,9 @@ export default {
         status: 1
       }
     },
-    handleNew() {
-      if (this.$refs['form']) {
-        this.$refs['form'].resetFields()
-      }
-      this.form = this.resetForm()
-      this.open = true
+    handleAdd() {
+      this.resetForm()
+      this.dialogVisible = true
     },
     handleBatchDelete() {
       del(this.ids).then(res => {
@@ -233,11 +236,13 @@ export default {
       })
     },
     handleEdit(row) {
-      if (this.$refs['form']) {
-        this.$refs['form'].resetFields()
-      }
-      this.form = row
-      this.open = true
+      this.resetForm()
+      get(row.id).then(res => {
+        if (res.code === 0) {
+          this.form = res.data
+          this.dialogVisible = true
+        }
+      })
     },
     handleDelete(row) {
       del(row.id).then(res => {
@@ -254,14 +259,14 @@ export default {
         if (valid) {
           save(this.form).then(res => {
             if (res.code === 0) {
-              this.open = false
+              this.dialogVisible = false
             }
           })
         }
       })
     },
     cancel() {
-      this.open = false
+      this.dialogVisible = false
     },
     transStatus(val) {
       switch (val) {

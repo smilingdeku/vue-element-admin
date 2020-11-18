@@ -30,6 +30,13 @@ export function page(params) {
   })
 }
 
+export function get(id) {
+  return request({
+    url: `/sys/user/${id}`,
+    method: 'get'
+  })
+}
+
 export function del(ids) {
   return request({
     url: `/sys/user/${ids}`,

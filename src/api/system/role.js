@@ -7,3 +7,17 @@ export function page(params) {
     params: params
   })
 }
+
+export function get(id) {
+  return request({
+    url: `/sys/role/${id}`,
+    method: 'get'
+  })
+}
+
+export function getPermissions(id) {
+  return request({
+    url: `/sys/role/${id}/resources`,
+    method: 'get'
+  })
+}
