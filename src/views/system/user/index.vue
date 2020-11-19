@@ -73,7 +73,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="!form.id" label="密码" prop="password">
+            <el-form-item label="密码" prop="password">
               <el-input v-model="form.password" type="password" placeholder="请输入密码" />
             </el-form-item>
           </el-col>
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { page, del, save, get } from '@/api/system/user'
+import { page, del, save, get, update } from '@/api/system/user'
 import Pagination from '@/components/Pagination'
 import permission from '@/directive/permission/index.js'
 
@@ -151,6 +151,7 @@ export default {
         pageSize: 10
       },
       dialogVisible: false,
+      isSave: true,
       form: {
         id: undefined,
         username: '',
@@ -226,6 +227,7 @@ export default {
     },
     handleAdd() {
       this.resetForm()
+      this.isSave = true
       this.dialogVisible = true
     },
     handleBatchDelete() {
@@ -237,6 +239,7 @@ export default {
     },
     handleEdit(row) {
       this.resetForm()
+      this.isSave = false
       get(row.id).then(res => {
         if (res.code === 0) {
           this.form = res.data
@@ -257,11 +260,21 @@ export default {
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          save(this.form).then(res => {
-            if (res.code === 0) {
-              this.dialogVisible = false
-            }
-          })
+          if (this.isSave) {
+            save(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          } else {
+            update(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          }
         }
       })
     },

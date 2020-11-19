@@ -51,3 +51,11 @@ export function save(data) {
     data
   })
 }
+
+export function update(data) {
+  return request({
+    url: `/sys/user`,
+    method: 'put',
+    data
+  })
+}

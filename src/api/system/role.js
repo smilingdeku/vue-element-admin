@@ -15,6 +15,22 @@ export function get(id) {
   })
 }
 
+export function save(data) {
+  return request({
+    url: `/sys/role`,
+    method: 'post',
+    data
+  })
+}
+
+export function update(data) {
+  return request({
+    url: `/sys/role`,
+    method: 'put',
+    data
+  })
+}
+
 export function getPermissions(id) {
   return request({
     url: `/sys/role/${id}/resources`,
