@@ -200,6 +200,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (!this.isSave) {
+            console.log(this.$refs['tree'].getCheckedKeys())
             console.log(this.form)
           }
         }
