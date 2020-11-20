@@ -111,7 +111,7 @@
         </el-row>
       </el-form>
       <div slot="footer">
-        <el-button type="primary" small @click="submitForm">确 定</el-button>
+        <el-button v-permission="['system:user:add', 'system:user:edit']" type="primary" small @click="submitForm">确 定</el-button>
         <el-button small @click="cancel">取 消</el-button>
       </div>
     </el-dialog>

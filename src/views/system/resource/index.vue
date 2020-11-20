@@ -13,6 +13,7 @@
         </div>
         <div class="action-container">
           <el-button
+            v-permission="['system:resource:add']"
             class="action-item"
             size="small"
             type="primary"
@@ -49,11 +50,13 @@
             <template slot-scope="scope">
               <div class="operate-container">
                 <el-link
+                  v-permission="['system:resource:edit']"
                   class="operate-item"
                   icon="el-icon-edit"
                   @click="handleEdit(scope.row)"
                 >编辑</el-link>
                 <el-link
+                  v-permission="['system:resource:delete']"
                   class="operate-item"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
@@ -133,7 +136,7 @@
         </el-row>
       </el-form>
       <div slot="footer">
-        <el-button type="primary" small @click="submitForm">确 定</el-button>
+        <el-button v-permission="['system:resource:add', 'system:resource:edit']" type="primary" small @click="submitForm">确 定</el-button>
         <el-button small @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -141,10 +144,12 @@
 </template>
 
 <script>
-import { list } from '@/api/system/resource'
+import { list, save, del, get, update } from '@/api/system/resource'
+import permission from '@/directive/permission/index.js'
 
 export default {
   components: {},
+  directives: { permission },
   filters: {
     typeFilter(type) {
       const typeMap = {
@@ -226,11 +231,46 @@ export default {
     },
     handleAdd() {
       this.resetForm()
+      this.isSave = true
       this.dialogVisible = true
     },
-    handleEdit(row) {},
-    handleDelete(row) {},
-    submitForm() {},
+    handleEdit(row) {
+      this.resetForm()
+      this.isSave = false
+      get(row.id).then(res => {
+        if (res.code === 0) {
+          this.form = res.data
+          this.dialogVisible = true
+        }
+      })
+    },
+    handleDelete(row) {
+      del(row.id).then(res => {
+        if (res.code === 0) {
+          this.dialogVisible = false
+          this.getList()
+        }
+      })
+    },
+    submitForm() {
+      this.$refs['form'].validate(valid => {
+        if (this.isSave) {
+          save(this.form).then(res => {
+            if (res.code === 0) {
+              this.dialogVisible = false
+              this.getList()
+            }
+          })
+        } else {
+          update(this.form).then(res => {
+            if (res.code === 0) {
+              this.dialogVisible = false
+              this.getList()
+            }
+          })
+        }
+      })
+    },
     cancel() {
       this.dialogVisible = false
     },

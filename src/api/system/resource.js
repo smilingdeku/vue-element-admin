@@ -13,3 +13,26 @@ export function list() {
     method: 'get'
   })
 }
+
+export function save(data) {
+  return request({
+    url: `/sys/resource`,
+    method: 'post',
+    data
+  })
+}
+
+export function update(data) {
+  return request({
+    url: `/sys/resource`,
+    method: 'put',
+    data
+  })
+}
+
+export function del(ids) {
+  return request({
+    url: `/sys/resource/${ids}`,
+    method: 'delete'
+  })
+}
