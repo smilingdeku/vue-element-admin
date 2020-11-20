@@ -31,6 +31,13 @@ export function update(data) {
   })
 }
 
+export function del(ids) {
+  return request({
+    url: `/sys/role/${ids}`,
+    method: 'delete'
+  })
+}
+
 export function getPermissions(id) {
   return request({
     url: `/sys/role/${id}/resources`,

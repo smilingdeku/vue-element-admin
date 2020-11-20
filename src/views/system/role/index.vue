@@ -33,7 +33,7 @@
             <template slot-scope="scope">
               <div class="operate-container">
                 <el-link class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
-                <el-link class="operate-item" icon="el-icon-delete">删除</el-link>
+                <el-link class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
               </div>
             </template>
           </el-table-column>
@@ -68,8 +68,8 @@
                 ref="tree"
                 :data="tree"
                 :props="defaultProps"
-                :default-expanded-keys="checkedNodes"
-                :default-checked-keys="checkedNodes"
+                :default-expanded-keys="form.resourceIds"
+                :default-checked-keys="form.resourceIds"
                 check-strictly
                 show-checkbox
                 node-key="id"
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { page, getPermissions, get } from '@/api/system/role'
+import { page, getPermissions, get, save, update, del } from '@/api/system/role'
 import Pagination from '@/components/Pagination'
 
 export default {
@@ -113,15 +113,15 @@ export default {
       form: {
         id: undefined,
         name: '',
-        memo: ''
+        memo: '',
+        resourceIds: []
       },
       rules: {},
       defaultProps: {
         children: 'children',
         label: 'name'
       },
-      tree: [],
-      checkedNodes: []
+      tree: []
     }
   },
   computed: {},
@@ -163,10 +163,10 @@ export default {
       this.form = {
         id: undefined,
         name: '',
-        memo: ''
+        memo: '',
+        resourceIds: []
       }
       this.tree = []
-      this.checkedNodes = []
     },
     handleAdd() {
       this.resetForm()
@@ -178,14 +178,23 @@ export default {
         }
       })
     },
-    handleBatchDelete() {},
-    handleSelectionChange() {},
+    handleBatchDelete() {
+      del(this.ids).then(res => {
+        if (res.code === 0) {
+          this.getList()
+        }
+      })
+    },
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+    },
     handleEdit(row) {
       this.resetForm()
       this.isSave = false
       get(row.id).then(res => {
         if (res.code === 0) {
           this.form = res.data
+          this.form.resourceIds = []
         }
       })
       getPermissions(row.id).then(res => {
@@ -196,12 +205,32 @@ export default {
         }
       })
     },
+    handleDelete(row) {
+      del(row.id).then(res => {
+        if (res.code === 0) {
+          this.getList()
+        }
+      })
+    },
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (!this.isSave) {
-            console.log(this.$refs['tree'].getCheckedKeys())
-            console.log(this.form)
+          debugger
+          this.form.resourceIds = this.$refs['tree'].getCheckedKeys()
+          if (this.isSave) {
+            save(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          } else {
+            update(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
           }
         }
       })
@@ -212,7 +241,7 @@ export default {
     findCheckedNodes(tree) {
       tree.forEach((item) => {
         if (item.hasPermission) {
-          this.checkedNodes.push(item.id)
+          this.form.resourceIds.push(item.id)
         }
         if (item.children) {
           this.findCheckedNodes(item.children)
