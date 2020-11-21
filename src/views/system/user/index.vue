@@ -17,42 +17,50 @@
         </div>
       </el-header>
       <el-main>
-        <el-table
-          :key="tableKey"
-          v-loading="loading"
-          :row-key="row => row.id"
-          :data="list"
-          :header-cell-style="{ fontWeight: 'bold' }"
-          highlight-current-row
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column :reserve-selection="true" type="selection" width="50" />
-          <el-table-column align="center" prop="username" label="用户名" show-overflow-tooltip />
-          <el-table-column align="center" prop="realName" label="姓名" show-overflow-tooltip />
-          <el-table-column align="center" prop="avatar" label="头像" show-overflow-tooltip>
-            <template slot-scope="{row}">
-              <el-avatar shape="square" :src="row.avatar" />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="email" label="邮箱" show-overflow-tooltip />
-          <el-table-column align="center" prop="phone" label="联系电话" show-overflow-tooltip />
-          <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
-          <el-table-column align="center" prop="status" label="状态">
-            <template slot-scope="{row}">
-              <el-tag :type="row.status | statusFilter">
-                {{ transStatus(row.status) }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <div class="operate-container">
-                <el-link v-permission="['system:user:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
-                <el-link v-permission="['system:user:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-card shadow="never">
+          <el-table
+            :key="tableKey"
+            v-loading="loading"
+            class="table"
+            :row-key="row => row.id"
+            :data="list"
+            :header-cell-style="{ fontWeight: 'bold' }"
+            ::cell-class-name="cell"
+            highlight-current-row
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column :reserve-selection="true" type="selection" width="50" />
+            <el-table-column align="center" prop="username" label="用户名" show-overflow-tooltip />
+            <el-table-column align="center" prop="realName" label="姓名" show-overflow-tooltip />
+            <el-table-column align="center" prop="avatar" label="头像" show-overflow-tooltip>
+              <template slot-scope="{row}">
+                <el-avatar shape="square" :src="row.avatar" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="email" label="邮箱" show-overflow-tooltip />
+            <el-table-column align="center" prop="phone" label="联系电话" show-overflow-tooltip />
+            <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
+            <el-table-column align="center" prop="status" label="状态">
+              <template slot-scope="{row}">
+                <el-tag :type="row.status | statusFilter">
+                  {{ transStatus(row.status) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="createdAt" label="创建时间" show-overflow-tooltip />
+            <el-table-column align="center" prop="updatedAt" label="更新时间" show-overflow-tooltip>
+              <template slot-scope="{row}">{{ row.updatedAt || '-' }}</template>
+            </el-table-column>
+            <el-table-column align="center" label="操作">
+              <template slot-scope="scope">
+                <div class="operate-container">
+                  <el-link v-permission="['system:user:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
+                  <el-link v-permission="['system:user:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
       </el-main>
       <el-footer>
         <pagination
@@ -179,6 +187,9 @@ export default {
       rules: {
         username: [
           { required: true, message: '用户名称不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
         ]
       },
       roles: [],
