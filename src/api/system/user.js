@@ -59,3 +59,10 @@ export function update(data) {
     data
   })
 }
+
+export function getRoles(id) {
+  return request({
+    url: `/sys/user/${id}/roles`,
+    method: 'get'
+  })
+}

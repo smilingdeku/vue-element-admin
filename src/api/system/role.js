@@ -38,6 +38,13 @@ export function del(ids) {
   })
 }
 
+export function list() {
+  return request({
+    url: `/sys/role/list`,
+    method: 'get'
+  })
+}
+
 export function getPermissions(id) {
   return request({
     url: `/sys/role/${id}/resources`,

@@ -93,6 +93,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
+            <el-form-item label="角色" prop="=roleIds">
+              <el-select v-model="form.roleIds" class="role-select" clearable multiple placeholder="请选择角色" @change="selectChange">
+                <el-option
+                  v-for="item in roles"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label="备注" prop="=memo">
               <el-input v-model="form.memo" placeholder="请输联系备注" />
             </el-form-item>
@@ -119,7 +131,8 @@
 </template>
 
 <script>
-import { page, del, save, get, update } from '@/api/system/user'
+import { page, del, save, get, update, getRoles } from '@/api/system/user'
+import { list } from '@/api/system/role'
 import Pagination from '@/components/Pagination'
 import permission from '@/directive/permission/index.js'
 
@@ -160,13 +173,15 @@ export default {
         email: '',
         phone: '',
         memo: '',
-        status: 1
+        status: 1,
+        roleIds: [1, 2]
       },
       rules: {
         username: [
           { required: true, message: '用户名称不能为空', trigger: 'blur' }
         ]
       },
+      roles: [],
       statusList: [
         {
           key: '启用',
@@ -183,6 +198,7 @@ export default {
   watch: {},
   created() {
     this.getList()
+    this.getRoleList()
   },
   mounted() {},
   methods: {
@@ -195,6 +211,13 @@ export default {
         setTimeout(() => {
           this.loading = false
         }, 1000)
+      })
+    },
+    getRoleList() {
+      list().then(res => {
+        if (res.code === 0) {
+          this.roles = res.data
+        }
       })
     },
     query() {
@@ -222,7 +245,8 @@ export default {
         email: '',
         phone: '',
         memo: '',
-        status: 1
+        status: 1,
+        roleIds: []
       }
     },
     handleAdd() {
@@ -243,7 +267,12 @@ export default {
       get(row.id).then(res => {
         if (res.code === 0) {
           this.form = res.data
-          this.dialogVisible = true
+          getRoles(row.id).then(res => {
+            if (res.code === 0) {
+              this.form.roleIds = res.data
+              this.dialogVisible = true
+            }
+          })
         }
       })
     },
@@ -281,6 +310,10 @@ export default {
     cancel() {
       this.dialogVisible = false
     },
+    selectChange() {
+      // 解决多选回显后无法编辑
+      this.$forceUpdate()
+    },
     transStatus(val) {
       switch (val) {
         case 0:
@@ -293,4 +326,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.role-select {
+  width: 100%;
+}
+</style>
