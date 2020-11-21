@@ -19,15 +19,15 @@
       <el-main>
         <el-card shadow="never">
           <el-table
+            ref="table"
             :key="tableKey"
             v-loading="loading"
-            class="table"
             :row-key="row => row.id"
             :data="list"
             :header-cell-style="{ fontWeight: 'bold' }"
-            ::cell-class-name="cell"
             highlight-current-row
             @selection-change="handleSelectionChange"
+            @sort-change="handleSortChange"
           >
             <el-table-column :reserve-selection="true" type="selection" width="50" />
             <el-table-column align="center" prop="username" label="用户名" show-overflow-tooltip />
@@ -47,8 +47,8 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="createdAt" label="创建时间" show-overflow-tooltip />
-            <el-table-column align="center" prop="updatedAt" label="更新时间" show-overflow-tooltip>
+            <el-table-column align="center" prop="createdAt" label="创建时间" show-overflow-tooltip sortable="custom" />
+            <el-table-column align="center" prop="updatedAt" label="更新时间" show-overflow-tooltip sortable="custom">
               <template slot-scope="{row}">{{ row.updatedAt || '-' }}</template>
             </el-table-column>
             <el-table-column align="center" label="操作">
@@ -169,7 +169,9 @@ export default {
       queryParams: {
         username: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
+        orderField: '',
+        isAsc: true
       },
       dialogVisible: false,
       isSave: true,
@@ -182,7 +184,7 @@ export default {
         phone: '',
         memo: '',
         status: 1,
-        roleIds: [1, 2]
+        roleIds: []
       },
       rules: {
         username: [
@@ -238,6 +240,7 @@ export default {
       if (this.$refs['queryForm']) {
         this.$refs['queryForm'].resetFields()
       }
+      this.$refs['table'].clearSort()
       this.queryParams = {
         pageIndex: 1,
         pageSize: 10
@@ -296,6 +299,11 @@ export default {
     },
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
+    },
+    handleSortChange(val) {
+      this.queryParams.orderField = val.prop
+      this.queryParams.isAsc = val.order !== 'descending'
+      this.getList()
     },
     submitForm() {
       this.$refs['form'].validate(valid => {
