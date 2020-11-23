@@ -298,4 +298,11 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.el-table ::v-deep td {
+  border-bottom: 0px solid #dfe6ec;
+}
+::v-deep .el-table::before {
+  height: 0px;
+}
+</style>

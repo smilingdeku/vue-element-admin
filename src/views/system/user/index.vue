@@ -102,7 +102,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="角色" prop="=roleIds">
-              <el-select v-model="form.roleIds" class="role-select" clearable multiple placeholder="请选择角色" @change="selectChange">
+              <el-select v-model="form.roleIds" class="select" clearable multiple placeholder="请选择角色" @change="selectChange">
                 <el-option
                   v-for="item in roles"
                   :key="item.id"
@@ -347,7 +347,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.role-select {
+.select {
   width: 100%;
+}
+.el-table ::v-deep td {
+  border-bottom: 0px solid #dfe6ec;
+}
+::v-deep .el-table::before {
+  height: 0px;
 }
 </style>
