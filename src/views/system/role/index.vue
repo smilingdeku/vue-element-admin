@@ -5,7 +5,7 @@
         <div class="filter-container" style="flex: 1;">
           <el-form ref="queryForm">
             <el-form-item class="filter-item">
-              <el-input v-model="queryParams.name" placeholder="请输入角色名" clearable />
+              <el-input v-model="queryParams.keyword" placeholder="请输入角色名" clearable />
             </el-form-item>
             <el-button size="small" type="primary" @click="query">查 询</el-button>
             <el-button size="small" @click="resetQueryForm">重 置</el-button>
@@ -108,7 +108,7 @@ export default {
       list: [],
       total: 0,
       queryParams: {
-        name: '',
+        keyword: '',
         pageIndex: 1,
         pageSize: 10
       },
@@ -154,7 +154,7 @@ export default {
         this.$refs['queryForm'].resetFields()
       }
       this.queryParams = {
-        name: undefined,
+        keyword: undefined,
         pageIndex: 1,
         pageSize: 10
       }

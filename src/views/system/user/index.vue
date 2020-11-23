@@ -5,7 +5,7 @@
         <div class="filter-container" style="flex: 1;">
           <el-form ref="queryForm">
             <el-form-item class="filter-item">
-              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
+              <el-input v-model="queryParams.keyword" placeholder="请输入用户名" clearable />
             </el-form-item>
             <el-button size="small" type="primary" @click="query">查 询</el-button>
             <el-button size="small" @click="resetQueryForm">重 置</el-button>
@@ -167,7 +167,7 @@ export default {
       list: [],
       total: 0,
       queryParams: {
-        username: '',
+        keyword: '',
         pageIndex: 1,
         pageSize: 10,
         orderField: '',
@@ -242,6 +242,7 @@ export default {
       }
       this.$refs['table'].clearSort()
       this.queryParams = {
+        keyword: undefined,
         pageIndex: 1,
         pageSize: 10
       }
