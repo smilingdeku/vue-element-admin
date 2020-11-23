@@ -23,48 +23,51 @@
         </div>
       </el-header>
       <el-main>
-        <el-table
-          v-loading="loading"
-          :data="list"
-          row-key="id"
-          :header-cell-style="{ fontWeight: 'bold' }"
-          highlight-current-row
-          :tree-props="{ children: 'children' }"
-        >
-          <!-- <el-table-column :reserve-selection="true" type="selection" width="50" /> -->
-          <el-table-column align="center" label="名称">
-            <template slot-scope="{ row }">
-              <span :class="row.icon">{{ row.name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="type" label="类型">
-            <template slot-scope="{ row }">
-              {{ transType(row.type) }}
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="path" label="路径" />
-          <el-table-column align="center" prop="component" label="组件" />
-          <el-table-column align="center" prop="permission" label="权限" />
-          <el-table-column align="center" prop="sortNumber" label="序号" />
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <div class="operate-container">
-                <el-link
-                  v-permission="['system:resource:edit']"
-                  class="operate-item"
-                  icon="el-icon-edit"
-                  @click="handleEdit(scope.row)"
-                >编辑</el-link>
-                <el-link
-                  v-permission="['system:resource:delete']"
-                  class="operate-item"
-                  icon="el-icon-delete"
-                  @click="handleDelete(scope.row)"
-                >删除</el-link>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-card shadow="never">
+          <el-table
+            v-loading="loading"
+            :data="list"
+            row-key="id"
+            :expand-row-keys="list.map(data => data.id)"
+            :header-cell-style="{ fontWeight: 'bold' }"
+            highlight-current-row
+            :tree-props="{ children: 'children' }"
+          >
+            <!-- <el-table-column :reserve-selection="true" type="selection" width="50" /> -->
+            <el-table-column align="center" label="名称">
+              <template slot-scope="{ row }">
+                <span :class="row.icon">{{ row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="type" label="类型">
+              <template slot-scope="{ row }">
+                {{ transType(row.type) }}
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="path" label="路径" />
+            <el-table-column align="center" prop="component" label="组件" />
+            <el-table-column align="center" prop="permission" label="权限" />
+            <el-table-column align="center" prop="sortNumber" label="序号" />
+            <el-table-column align="center" label="操作">
+              <template slot-scope="scope">
+                <div class="operate-container">
+                  <el-link
+                    v-permission="['system:resource:edit']"
+                    class="operate-item"
+                    icon="el-icon-edit"
+                    @click="handleEdit(scope.row)"
+                  >编辑</el-link>
+                  <el-link
+                    v-permission="['system:resource:delete']"
+                    class="operate-item"
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.row)"
+                  >删除</el-link>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
       </el-main>
     </el-container>
     <el-dialog :visible.sync="dialogVisible" width="600px" append-to-body>

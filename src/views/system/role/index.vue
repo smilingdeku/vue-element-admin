@@ -17,27 +17,29 @@
         </div>
       </el-header>
       <el-main>
-        <el-table
-          :key="tableKey"
-          v-loading="loading"
-          :row-key="row => row.id"
-          :data="list"
-          :header-cell-style="{ fontWeight: 'bold' }"
-          highlight-current-row
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column align="center" :reserve-selection="true" type="selection" width="50" />
-          <el-table-column align="center" prop="name" label="角色名" show-overflow-tooltip />
-          <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <div class="operate-container">
-                <el-link v-permission="['system:role:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
-                <el-link v-permission="['system:role:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-card shadow="never">
+          <el-table
+            :key="tableKey"
+            v-loading="loading"
+            :row-key="row => row.id"
+            :data="list"
+            :header-cell-style="{ fontWeight: 'bold' }"
+            highlight-current-row
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column align="center" :reserve-selection="true" type="selection" width="50" />
+            <el-table-column align="center" prop="name" label="角色名" show-overflow-tooltip />
+            <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
+            <el-table-column align="center" label="操作">
+              <template slot-scope="scope">
+                <div class="operate-container">
+                  <el-link v-permission="['system:role:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>
+                  <el-link v-permission="['system:role:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
       </el-main>
       <el-footer>
         <pagination
