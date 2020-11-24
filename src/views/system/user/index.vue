@@ -64,8 +64,8 @@
       </el-main>
       <el-footer>
         <pagination
-          v-show="total > 0"
-          :total="total"
+          v-show="Number(total) > 0"
+          :total="Number(total)"
           :page.sync="queryParams.pageIndex"
           :limit.sync="queryParams.pageSize"
           @pagination="getList"
