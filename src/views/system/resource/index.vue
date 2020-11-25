@@ -3,13 +3,13 @@
     <el-container>
       <el-header style="display: flex;">
         <div class="filter-container" style="flex: 1;">
-          <el-form ref="queryForm">
+          <!-- <el-form ref="queryForm">
             <el-form-item class="filter-item">
-              <el-input placeholder="请输入名称" clearable />
+              <el-input v-model="queryParams.keyword" placeholder="请输入名称" clearable />
             </el-form-item>
-            <el-button size="small" type="primary">查 询</el-button>
-            <el-button size="small">重 置</el-button>
-          </el-form>
+            <el-button size="small" type="primary" @click="query">查 询</el-button>
+            <el-button size="small" @click="resetQueryForm">重 置</el-button>
+          </el-form> -->
         </div>
         <div class="action-container">
           <el-button
@@ -19,7 +19,7 @@
             type="primary"
             @click="handleAdd"
           >添 加</el-button>
-          <!-- <el-button class="action-item" size="small" type="danger">删 除</el-button> -->
+          <el-button class="action-item" size="small" @click="refresh">刷 新</el-button>
         </div>
       </el-header>
       <el-main>
@@ -167,6 +167,9 @@ export default {
     return {
       loading: false,
       dialogVisible: false,
+      // queryParams: {
+      //   keyword: ''
+      // },
       list: [],
       form: {
         id: undefined,
@@ -231,6 +234,9 @@ export default {
         permission: '',
         sortNumber: 0
       }
+    },
+    refresh() {
+      this.getList()
     },
     handleAdd() {
       this.resetForm()
