@@ -170,7 +170,7 @@ export default {
         keyword: '',
         pageIndex: 1,
         pageSize: 10,
-        orderField: '',
+        orderField: undefined,
         isAsc: true
       },
       dialogVisible: false,
@@ -244,7 +244,9 @@ export default {
       this.queryParams = {
         keyword: undefined,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
+        orderField: undefined,
+        isAsc: true
       }
       this.getList()
     },
