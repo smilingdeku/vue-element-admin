@@ -82,7 +82,7 @@
                 clearable
                 @clear="handleSelectClear"
               >
-                <el-option key="parentId" hidden :value="form.parentId" :label="form.parentName" />
+                <el-option key="parentId" hidden :value="form.parentId" :label="form.parentId === '0' ? '无' : form.parentName" />
                 <el-tree
                   :data="list"
                   :props="defaultProps"
@@ -173,7 +173,7 @@ export default {
       list: [],
       form: {
         id: undefined,
-        parentId: undefined,
+        parentId: '0',
         parentName: '',
         name: '',
         type: 1,
@@ -224,7 +224,7 @@ export default {
       }
       this.form = {
         id: undefined,
-        parentId: undefined,
+        parentId: '0',
         parentName: '',
         name: '',
         type: 1,
@@ -289,8 +289,8 @@ export default {
       this.$refs.resourceSelect.blur()
     },
     handleSelectClear() {
-      this.form.parentId = undefined
-      this.form.parentName = ''
+      this.form.parentId = '0'
+      this.form.parentName = '无'
     },
     transType(val) {
       switch (val) {
