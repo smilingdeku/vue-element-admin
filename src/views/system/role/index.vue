@@ -5,7 +5,7 @@
         <div class="filter-container" style="flex: 1;">
           <el-form ref="queryForm">
             <el-form-item class="filter-item">
-              <el-input v-model="queryParams.name" placeholder="请输入角色名" clearable />
+              <el-input v-model="queryParams.keyword" placeholder="请输入角色名" clearable @keyup.enter.native="getList()" />
             </el-form-item>
             <el-button size="small" type="primary" @click="query">查 询</el-button>
             <el-button size="small" @click="resetQueryForm">重 置</el-button>
@@ -19,17 +19,23 @@
       <el-main>
         <el-card shadow="never">
           <el-table
+            ref="table"
             :key="tableKey"
             v-loading="loading"
             :row-key="row => row.id"
             :data="list"
             :header-cell-style="{ fontWeight: 'bold' }"
             highlight-current-row
+            @sort-change="handleSortChange"
             @selection-change="handleSelectionChange"
           >
             <el-table-column align="center" :reserve-selection="true" type="selection" width="50" />
             <el-table-column align="center" prop="name" label="角色名" show-overflow-tooltip />
             <el-table-column align="center" prop="memo" label="备注" show-overflow-tooltip />
+            <el-table-column align="center" prop="createdAt" label="创建时间" show-overflow-tooltip sortable="custom" />
+            <el-table-column align="center" prop="updatedAt" label="更新时间" show-overflow-tooltip sortable="custom">
+              <template slot-scope="{row}">{{ row.updatedAt || '-' }}</template>
+            </el-table-column>
             <el-table-column align="center" label="操作">
               <template slot-scope="scope">
                 <div class="operate-container">
@@ -108,9 +114,11 @@ export default {
       list: [],
       total: 0,
       queryParams: {
-        name: '',
+        keyword: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
+        orderField: undefined,
+        isAsc: true
       },
       dialogVisible: false,
       isSave: true,
@@ -140,7 +148,7 @@ export default {
       this.loading = true
       page(this.queryParams).then(res => {
         this.list = res.data
-        this.total = res.total
+        this.total = Number(res.total)
         setTimeout(() => {
           this.loading = false
         }, 1000)
@@ -153,10 +161,13 @@ export default {
       if (this.$refs['queryForm']) {
         this.$refs['queryForm'].resetFields()
       }
+      this.$refs['table'].clearSort()
       this.queryParams = {
-        name: undefined,
+        keyword: undefined,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
+        orderField: undefined,
+        isAsc: true
       }
       this.getList()
     },
@@ -191,6 +202,11 @@ export default {
     },
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
+    },
+    handleSortChange(val) {
+      this.queryParams.orderField = val.prop
+      this.queryParams.isAsc = val.order !== 'descending'
+      this.getList()
     },
     handleEdit(row) {
       this.resetForm()
@@ -256,6 +272,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.el-table ::v-deep td {
+  border-bottom: 0px solid #dfe6ec;
+}
+::v-deep .el-table::before {
+  height: 0px;
+}
 </style>

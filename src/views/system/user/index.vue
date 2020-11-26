@@ -5,7 +5,7 @@
         <div class="filter-container" style="flex: 1;">
           <el-form ref="queryForm">
             <el-form-item class="filter-item">
-              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
+              <el-input v-model="queryParams.keyword" placeholder="请输入用户名" clearable @keyup.enter.native="getList()" />
             </el-form-item>
             <el-button size="small" type="primary" @click="query">查 询</el-button>
             <el-button size="small" @click="resetQueryForm">重 置</el-button>
@@ -102,7 +102,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="角色" prop="=roleIds">
-              <el-select v-model="form.roleIds" class="role-select" clearable multiple placeholder="请选择角色" @change="selectChange">
+              <el-select v-model="form.roleIds" class="select" clearable multiple placeholder="请选择角色" @change="selectChange">
                 <el-option
                   v-for="item in roles"
                   :key="item.id"
@@ -167,10 +167,10 @@ export default {
       list: [],
       total: 0,
       queryParams: {
-        username: '',
+        keyword: '',
         pageIndex: 1,
         pageSize: 10,
-        orderField: '',
+        orderField: undefined,
         isAsc: true
       },
       dialogVisible: false,
@@ -219,7 +219,7 @@ export default {
       this.loading = true
       page(this.queryParams).then(res => {
         this.list = res.data
-        this.total = res.total
+        this.total = Number(res.total)
 
         setTimeout(() => {
           this.loading = false
@@ -242,8 +242,11 @@ export default {
       }
       this.$refs['table'].clearSort()
       this.queryParams = {
+        keyword: undefined,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
+        orderField: undefined,
+        isAsc: true
       }
       this.getList()
     },
@@ -338,7 +341,7 @@ export default {
         case 0:
           return '禁用'
         case 1:
-          return '有效'
+          return '启用'
       }
     }
   }
@@ -346,7 +349,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.role-select {
+.select {
   width: 100%;
+}
+.el-table ::v-deep td {
+  border-bottom: 0px solid #dfe6ec;
+}
+::v-deep .el-table::before {
+  height: 0px;
 }
 </style>
