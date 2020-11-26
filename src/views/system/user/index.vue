@@ -64,8 +64,8 @@
       </el-main>
       <el-footer>
         <pagination
-          v-show="Number(total) > 0"
-          :total="Number(total)"
+          v-show="total > 0"
+          :total="total"
           :page.sync="queryParams.pageIndex"
           :limit.sync="queryParams.pageSize"
           @pagination="getList"
@@ -219,7 +219,7 @@ export default {
       this.loading = true
       page(this.queryParams).then(res => {
         this.list = res.data
-        this.total = res.total
+        this.total = Number(res.total)
 
         setTimeout(() => {
           this.loading = false
@@ -341,7 +341,7 @@ export default {
         case 0:
           return '禁用'
         case 1:
-          return '有效'
+          return '启用'
       }
     }
   }
