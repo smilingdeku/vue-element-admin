@@ -1,5 +1,5 @@
 import { constantRoutes } from '@/router'
-import { getRouters } from '@/api/resource'
+import { getRouters } from '@/api/system/resource'
 import Layout from '@/layout/index'
 
 const state = {
