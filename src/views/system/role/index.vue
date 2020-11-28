@@ -58,7 +58,7 @@
       </el-footer>
     </el-container>
     <el-dialog :visible.sync="dialogVisible" width="600px" :close-on-click-modal="false" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="60px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="70px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="角色名" prop="name">
@@ -128,7 +128,11 @@ export default {
         memo: '',
         resourceIds: []
       },
-      rules: {},
+      rules: {
+        name: [
+          { required: true, message: '角色名不能为空', trigger: 'blur' }
+        ]
+      },
       defaultProps: {
         children: 'children',
         label: 'name'
@@ -235,7 +239,6 @@ export default {
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          debugger
           this.form.resourceIds = this.$refs['tree'].getCheckedKeys()
           if (this.isSave) {
             save(this.form).then(res => {

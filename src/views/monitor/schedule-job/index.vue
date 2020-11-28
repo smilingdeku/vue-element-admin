@@ -243,17 +243,20 @@ export default {
         isAsc: true
       },
       statusList: [
-        {
-          key: '启用',
-          value: 1
-        },
-        {
-          key: '禁用',
-          value: 0
-        }
+        { key: '启用', value: 1 },
+        { key: '禁用', value: 0 }
       ],
       form: {
-        id: undefined
+        id: undefined,
+        name: '',
+        group: 'DEFAULT',
+        beanName: '',
+        params: '',
+        cron: '',
+        allowConcurrent: false,
+        misfirePolicy: 0,
+        memo: '',
+        status: 1
       },
       rules: {
         name: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
@@ -286,9 +289,14 @@ export default {
   mounted() {},
   methods: {
     getList() {
+      this.loading = true
       page(this.queryParams).then(res => {
         this.list = res.data
         this.total = Number(res.total)
+
+        setTimeout(() => {
+          this.loading = false
+        }, 1000)
       })
     },
     resetQueryForm() {
@@ -327,29 +335,31 @@ export default {
     handleEdit(row) {
       this.resetForm()
       this.isSave = false
-      this.dialogVisible = true
       get(row.id).then(res => {
         if (res.code === 0) {
           this.form = res.data
+          this.dialogVisible = true
         }
       })
     },
     submitForm() {
       this.$refs['form'].validate(valid => {
-        if (this.isSave) {
-          save(this.form).then(res => {
-            if (res.code === 0) {
-              this.dialogVisible = false
-              this.getList()
-            }
-          })
-        } else {
-          update(this.form).then(res => {
-            if (res.code === 0) {
-              this.dialogVisible = false
-              this.getList()
-            }
-          })
+        if (valid) {
+          if (this.isSave) {
+            save(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          } else {
+            update(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          }
         }
       })
     },
@@ -367,6 +377,18 @@ export default {
     resetForm() {
       if (this.$refs['form']) {
         this.$refs['form'].resetFields()
+      }
+      this.form = {
+        id: undefined,
+        name: '',
+        group: 'DEFAULT',
+        beanName: '',
+        params: '',
+        cron: '',
+        allowConcurrent: true,
+        misfirePolicy: 0,
+        memo: '',
+        status: 1
       }
     },
     handleBatchDelete() {

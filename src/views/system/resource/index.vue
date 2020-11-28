@@ -183,7 +183,11 @@ export default {
         permission: '',
         sortNumber: 0
       },
-      rules: {},
+      rules: {
+        name: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
+        ]
+      },
       typeOptions: [
         {
           value: 1,
@@ -263,20 +267,22 @@ export default {
     },
     submitForm() {
       this.$refs['form'].validate(valid => {
-        if (this.isSave) {
-          save(this.form).then(res => {
-            if (res.code === 0) {
-              this.dialogVisible = false
-              this.getList()
-            }
-          })
-        } else {
-          update(this.form).then(res => {
-            if (res.code === 0) {
-              this.dialogVisible = false
-              this.getList()
-            }
-          })
+        if (valid) {
+          if (this.isSave) {
+            save(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          } else {
+            update(this.form).then(res => {
+              if (res.code === 0) {
+                this.dialogVisible = false
+                this.getList()
+              }
+            })
+          }
         }
       })
     },
