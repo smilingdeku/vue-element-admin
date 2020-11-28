@@ -72,7 +72,7 @@
         />
       </el-footer>
     </el-container>
-    <el-dialog :visible.sync="dialogVisible" width="600px" append-to-body>
+    <el-dialog :visible.sync="dialogVisible" width="600px" :close-on-click-modal="false" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">

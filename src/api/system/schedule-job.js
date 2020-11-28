@@ -39,3 +39,11 @@ export function del(ids) {
     method: 'delete'
   })
 }
+
+export function run(id) {
+  return request({
+    url: REQUEST_URI_PREFIX + `/${id}/run`,
+    method: 'get'
+  })
+}
+

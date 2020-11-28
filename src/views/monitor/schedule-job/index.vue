@@ -8,7 +8,7 @@
               <el-input v-model="queryParams.keyword" placeholder="请输入任务名称" clearable />
             </el-form-item>
             <el-form-item class="filter-item">
-              <el-input v-model="queryParams.beanName" placeholder="beanName" clearable />
+              <el-input v-model="queryParams.beanName" placeholder="Bean 名称" clearable />
             </el-form-item>
             <el-button size="small" type="primary" @click="query">查 询</el-button>
             <el-button size="small" @click="resetQueryForm">重 置</el-button>
@@ -78,9 +78,14 @@
             <el-table-column align="center" prop="updatedAt" label="更新时间" show-overflow-tooltip sortable="custom">
               <template slot-scope="{row}">{{ row.updatedAt || '-' }}</template>
             </el-table-column> -->
-            <el-table-column align="center" label="操作">
+            <el-table-column width="200px" align="center" label="操作">
               <template slot-scope="scope">
                 <div class="operate-container">
+                  <el-link
+                    class="operate-item"
+                    icon="el-icon-thumb"
+                    @click="handleRun(scope.row)"
+                  >执行</el-link>
                   <el-link
                     class="operate-item"
                     icon="el-icon-edit"
@@ -108,7 +113,7 @@
       </el-footer>
     </el-container>
 
-    <el-dialog :visible.sync="dialogVisible" width="600px" append-to-body>
+    <el-dialog :visible.sync="dialogVisible" width="600px" :close-on-click-modal="false" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -119,13 +124,13 @@
 
           <el-col :span="24">
             <el-form-item label="Bean" prop="beanName">
-              <el-input v-model="form.beanName" placeholder="bean名称" />
+              <el-input v-model="form.beanName" placeholder="Bean 名称" />
             </el-form-item>
           </el-col>
 
           <el-col :span="24">
             <el-form-item label="cron" prop="cron">
-              <el-input v-model="form.cron" placeholder="cron表达式" />
+              <el-input v-model="form.cron" placeholder="Cron 表达式" />
             </el-form-item>
           </el-col>
 
@@ -137,7 +142,7 @@
 
           <el-col :span="12">
             <el-form-item label="组别" prop="group">
-              <el-select v-model="form.group" clearable placeholder="请选择类型">
+              <el-select v-model="form.group" clearable placeholder="请选择组别">
                 <el-option
                   v-for="item in groupOptions"
                   :key="item.value"
@@ -163,7 +168,7 @@
 
           <el-col :span="12">
             <el-form-item label="并发" prop="allowConcurrent">
-              <el-select v-model="form.allowConcurrent" clearable placeholder="状态">
+              <el-select v-model="form.allowConcurrent" clearable placeholder="并发">
                 <el-option
                   v-for="item in allowConcurrentOptions"
                   :key="item.value"
@@ -202,7 +207,7 @@
 </template>
 
 <script>
-import { page, get, save, update, del } from '@/api/system/schedule-job'
+import { page, get, save, update, del, run } from '@/api/system/schedule-job'
 import permission from '@/directive/permission/index.js'
 import Pagination from '@/components/Pagination'
 
@@ -287,7 +292,17 @@ export default {
       })
     },
     resetQueryForm() {
-      this.queryParams.keyword = ''
+      if (this.$refs['queryForm']) {
+        this.$refs['queryForm'].resetFields()
+      }
+      this.queryParams = {
+        keyword: undefined,
+        pageIndex: 1,
+        pageSize: 10,
+        orderField: undefined,
+        isAsc: true
+      }
+      this.getList()
     },
     query() {
       this.getList()
@@ -296,6 +311,18 @@ export default {
       this.resetForm()
       this.isSave = true
       this.dialogVisible = true
+    },
+    handleRun(row) {
+      run(row.id).then(res => {
+        if (res.code === 0) {
+          this.$message({
+            showClose: true,
+            message: '执行成功',
+            type: 'success',
+            duration: 3 * 1000
+          })
+        }
+      })
     },
     handleEdit(row) {
       this.resetForm()
