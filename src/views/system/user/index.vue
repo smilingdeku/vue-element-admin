@@ -51,7 +51,7 @@
             <el-table-column align="center" prop="updatedAt" label="更新时间" show-overflow-tooltip sortable="custom">
               <template slot-scope="{row}">{{ row.updatedAt || '-' }}</template>
             </el-table-column>
-            <el-table-column align="center" label="操作">
+            <el-table-column align="center" width="150px" label="操作">
               <template slot-scope="scope">
                 <div class="operate-container">
                   <el-link v-permission="['system:user:edit']" class="operate-item" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-link>

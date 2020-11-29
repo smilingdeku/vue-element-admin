@@ -43,7 +43,7 @@
           >
             <el-table-column :reserve-selection="true" type="selection" width="50" />
             <el-table-column align="center" prop="name" label="任务名称" show-overflow-tooltip />
-            <el-table-column align="center" prop="group" label="任务组" show-overflow-tooltip />
+            <!-- <el-table-column align="center" prop="group" label="任务组" show-overflow-tooltip /> -->
             <el-table-column
               align="center"
               prop="beanName"
@@ -139,7 +139,7 @@
               <el-input v-model="form.params" placeholder="任务参数" />
             </el-form-item>
           </el-col>
-
+          <!--
           <el-col :span="12">
             <el-form-item label="组别" prop="group">
               <el-select v-model="form.group" clearable placeholder="请选择组别">
@@ -151,7 +151,7 @@
                 />
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
 
           <el-col :span="12">
             <el-form-item label="策略" prop="misfirePolicy">
@@ -168,7 +168,7 @@
 
           <el-col :span="12">
             <el-form-item label="并发" prop="allowConcurrent">
-              <el-select v-model="form.allowConcurrent" clearable placeholder="并发">
+              <el-select v-model="form.allowConcurrent" placeholder="并发">
                 <el-option
                   v-for="item in allowConcurrentOptions"
                   :key="item.value"
@@ -181,7 +181,7 @@
 
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
-              <el-select v-model="form.status" clearable placeholder="状态">
+              <el-select v-model="form.status" placeholder="状态">
                 <el-option
                   v-for="item in statusOptions"
                   :key="item.value"
@@ -249,7 +249,7 @@ export default {
       form: {
         id: undefined,
         name: '',
-        group: 'DEFAULT',
+        // group: 'DEFAULT',
         beanName: '',
         params: '',
         cron: '',
@@ -381,7 +381,7 @@ export default {
       this.form = {
         id: undefined,
         name: '',
-        group: 'DEFAULT',
+        // group: 'DEFAULT',
         beanName: '',
         params: '',
         cron: '',

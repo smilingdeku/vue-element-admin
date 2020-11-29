@@ -44,11 +44,11 @@
                 {{ transType(row.type) }}
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="path" label="路径" />
-            <el-table-column align="center" prop="component" label="组件" />
-            <el-table-column align="center" prop="permission" label="权限" />
+            <el-table-column align="center" prop="path" label="路径" show-overflow-tooltip />
+            <el-table-column align="center" prop="component" label="组件" show-overflow-tooltip />
+            <el-table-column align="center" prop="permission" label="权限" show-overflow-tooltip />
             <el-table-column align="center" prop="sortNumber" label="序号" />
-            <el-table-column align="center" label="操作">
+            <el-table-column align="center" width="150px" label="操作">
               <template slot-scope="scope">
                 <div class="operate-container">
                   <el-link
