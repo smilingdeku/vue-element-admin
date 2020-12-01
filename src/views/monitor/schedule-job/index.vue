@@ -60,7 +60,7 @@
             <el-table-column
               align="center"
               prop="misfirePolicy"
-              label="任务策略"
+              label="超时策略"
               show-overflow-tooltip
             >
               <template slot-scope="{ row }">
@@ -129,7 +129,7 @@
           </el-col>
 
           <el-col :span="24">
-            <el-form-item label="cron" prop="cron">
+            <el-form-item label="Cron" prop="cron">
               <el-input v-model="form.cron" placeholder="Cron 表达式" />
             </el-form-item>
           </el-col>
@@ -154,7 +154,7 @@
           </el-col> -->
 
           <el-col :span="12">
-            <el-form-item label="策略" prop="misfirePolicy">
+            <el-form-item label="超时策略" prop="misfirePolicy">
               <el-select v-model="form.misfirePolicy" clearable placeholder="请选择策略">
                 <el-option
                   v-for="item in misfirePolicyOptions"
@@ -260,16 +260,16 @@ export default {
       },
       rules: {
         name: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
-        beanName: [{ required: true, message: 'bean不能为空', trigger: 'blur' }],
+        beanName: [{ required: true, message: 'Bean 名称不能为空', trigger: 'blur' }],
         cron: [{ required: true, message: '定时表达式不能为空', trigger: 'blur' }],
         status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
       },
       groupOptions: [{ value: 'DEFAULT', label: '默认组' }],
       misfirePolicyOptions: [
         { value: 0, label: '默认策略' },
-        { value: 1, label: '由他去吧' },
-        { value: 2, label: '忽略' },
-        { value: 3, label: '重试' }
+        { value: 1, label: '不触发任务' },
+        { value: 2, label: '立刻触发' },
+        { value: 3, label: '立刻触发一次' }
       ],
       allowConcurrentOptions: [
         { value: false, label: '不允许' },
@@ -404,13 +404,13 @@ export default {
     transMissfirePolicy(val) {
       switch (val) {
         case 0:
-          return '默认'
+          return '默认策略'
         case 1:
-          return '由他去吧'
+          return '不触发任务'
         case 2:
-          return '忽略'
+          return '立刻触发'
         case 3:
-          return '重试'
+          return '立刻触发一次'
       }
     },
     transStatus(val) {
