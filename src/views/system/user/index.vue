@@ -153,7 +153,7 @@ export default {
     statusFilter(status) {
       const statusMap = {
         0: 'danger',
-        1: 'primary'
+        1: 'success'
       }
       return statusMap[status]
     }

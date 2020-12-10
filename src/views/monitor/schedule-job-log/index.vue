@@ -38,7 +38,14 @@
             <el-table-column align="center" prop="jobName" label="任务名称" />
             <el-table-column align="center" prop="beanName" label="Bean 名称" show-overflow-tooltip />
             <el-table-column align="center" prop="params" label="参数" show-overflow-tooltip />
-            <el-table-column align="center" prop="spendTime" label="耗时" show-overflow-tooltip>
+            <el-table-column align="center" prop="status" label="执行状态">
+              <template slot-scope="{row}">
+                <el-tag :type="row.status === 1 ? success : danger">
+                  {{ row.status === 1 ? '成功' : '失败' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="spendTime" label="耗时">
               <template slot-scope="{row}">
                 {{ row.spendTime + 'ms' }}
               </template>

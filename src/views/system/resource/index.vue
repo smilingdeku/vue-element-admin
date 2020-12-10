@@ -154,13 +154,6 @@ export default {
   components: {},
   directives: { permission },
   filters: {
-    typeFilter(type) {
-      const typeMap = {
-        1: 'primary',
-        2: 'warning'
-      }
-      return typeMap[type]
-    }
   },
   props: {},
   data() {
