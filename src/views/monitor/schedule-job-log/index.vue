@@ -31,7 +31,7 @@
             <el-table-column align="center" :reserve-selection="true" type="selection" />
             <el-table-column type="expand" width="50">
               <template slot-scope="{row}">
-                <span style="font-weight:bold;">消息记录：</span>
+                <span style="font-weight:bold;">执行记录：</span>
                 <span>{{ row.message || "无" }}</span>
               </template>
             </el-table-column>
@@ -40,7 +40,7 @@
             <el-table-column align="center" prop="params" label="参数" show-overflow-tooltip />
             <el-table-column align="center" prop="status" label="执行状态">
               <template slot-scope="{row}">
-                <el-tag :type="row.status === 1 ? success : danger">
+                <el-tag :type="row.status | statusFilter">
                   {{ row.status === 1 ? '成功' : '失败' }}
                 </el-tag>
               </template>
@@ -81,6 +81,15 @@ import Pagination from '@/components/Pagination'
 export default {
   components: {
     Pagination
+  },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        0: 'danger',
+        1: 'success'
+      }
+      return statusMap[status]
+    }
   },
   props: {},
   data() {
