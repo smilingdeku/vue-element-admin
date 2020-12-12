@@ -66,6 +66,8 @@ export default {
       this.chart.setOption({
         series: [
           {
+            startAngle: 180, // 开始角度 左侧角度
+            endAngle: 0,
             name: '性能指标',
             type: 'gauge',
             center: ['50%', '45%'],
@@ -102,7 +104,7 @@ export default {
             },
             title: {
               show: true,
-              offsetCenter: [0, '70%'],
+              offsetCenter: [0, '80%'],
               color: '#333',
               fontSize: 12,
               backgroundColor: '#D8d8d8',

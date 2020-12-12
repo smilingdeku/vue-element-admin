@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="6">
+      <el-col :xs="24" :sm="24" :lg="7">
         <el-card class="box-card">
           <div slot="header">
             系统信息
@@ -18,7 +18,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="6">
+      <el-col :xs="24" :sm="24" :lg="5">
         <el-card class="box-card">
           <div slot="header">
             硬件参数
