@@ -98,7 +98,6 @@ export default {
   },
   methods: {
     getInfo() {
-      console.log('test..')
       info().then(res => {
         if (res.code === 0) {
           this.server = res.data
