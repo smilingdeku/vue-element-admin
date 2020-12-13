@@ -61,7 +61,7 @@ export default {
       if (!this.chart) {
         this.chart = echarts.init(this.$el, 'macarons')
       } else {
-        this.chart.clear()
+        // this.chart.clear()
       }
       this.chart.setOption({
         series: [
@@ -118,7 +118,7 @@ export default {
             }
           }
         ]
-      })
+      }, true)
     }
   }
 }

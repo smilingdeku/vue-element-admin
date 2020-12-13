@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="7">
+      <el-col :xs="24" :sm="24" :lg="6">
         <el-card class="box-card">
           <div slot="header">
             系统信息
@@ -18,7 +18,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="5">
+      <el-col :xs="24" :sm="24" :lg="6">
         <el-card class="box-card">
           <div slot="header">
             硬件参数
@@ -64,6 +64,7 @@ export default {
   },
   data() {
     return {
+      timer: undefined,
       server: {
         hostAddress: '',
         time: '',
@@ -89,14 +90,24 @@ export default {
   computed: {
   },
   created() {
-    info().then(res => {
-      if (res.code === 0) {
-        this.server = res.data
-        this.cpu.value = this.server.cpuUsage
-        this.memory.value = this.server.memoryUsage
-        this.disk.value = this.server.maxSizePartitionUsage
-      }
-    })
+    this.getInfo()
+    this.timer = setInterval(this.getInfo, 15 * 1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  },
+  methods: {
+    getInfo() {
+      console.log('test..')
+      info().then(res => {
+        if (res.code === 0) {
+          this.server = res.data
+          this.cpu.value = this.server.cpuUsage
+          this.memory.value = this.server.memoryUsage
+          this.disk.value = this.server.maxSizePartitionUsage
+        }
+      })
+    }
   }
 }
 </script>
