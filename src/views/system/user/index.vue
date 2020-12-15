@@ -85,6 +85,20 @@
               <el-input v-model="form.password" type="password" placeholder="请输入密码" />
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="头像" prop="avatar">
+              <!-- <el-input v-model="form.avatar" /> -->
+              <el-upload
+                action="undefined"
+                class="avatar-uploader"
+                :http-request="uploadAvatar"
+                :show-file-list="false"
+              >
+                <img v-if="form.avatar" :src="form.avatar" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="姓名" prop="=realName">
               <el-input v-model="form.realName" placeholder="请输入姓名" />
@@ -140,6 +154,7 @@
 
 <script>
 import { page, del, save, get, update, getRoles } from '@/api/system/user'
+import { upload } from '@/api/common/file'
 import { list } from '@/api/system/role'
 import Pagination from '@/components/Pagination'
 import permission from '@/directive/permission/index.js'
@@ -179,6 +194,7 @@ export default {
         id: undefined,
         username: '',
         password: '',
+        avatar: '',
         realName: '',
         email: '',
         phone: '',
@@ -293,6 +309,15 @@ export default {
         }
       })
     },
+    uploadAvatar(file) {
+      upload(file).then(res => {
+        if (res.code === 0) {
+          const data = res.data[0]
+          this.form.avatar = data.fileUrl
+          this.$forceUpdate()
+        }
+      })
+    },
     handleDelete(row) {
       del(row.id).then(res => {
         if (res.code === 0) {
@@ -357,5 +382,30 @@ export default {
 }
 ::v-deep .el-table::before {
   height: 0px;
+}
+.avatar-uploader {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 20px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
 }
 </style>
