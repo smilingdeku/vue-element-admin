@@ -16,12 +16,14 @@
         </div>
         <div class="action-container">
           <el-button
+            v-permission="['monitor:schedule-job:add']"
             class="action-item"
             size="small"
             type="primary"
             @click="handleAdd"
           >添 加</el-button>
           <el-button
+            v-permission="['monitor:schedule-job:delete']"
             class="action-item"
             size="small"
             type="danger"
@@ -82,16 +84,19 @@
               <template slot-scope="scope">
                 <div class="operate-container">
                   <el-link
+                    v-permission="['monitor:schedule-job:run']"
                     class="operate-item"
                     icon="el-icon-thumb"
                     @click="handleRun(scope.row)"
                   >执行</el-link>
                   <el-link
+                    v-permission="['monitor:schedule-job:edit']"
                     class="operate-item"
                     icon="el-icon-edit"
                     @click="handleEdit(scope.row)"
                   >编辑</el-link>
                   <el-link
+                    v-permission="['monitor:schedule-job:delete']"
                     class="operate-item"
                     icon="el-icon-delete"
                     @click="handleDelete(scope.row)"
@@ -195,7 +200,7 @@
       </el-form>
       <div slot="footer">
         <el-button
-          v-permission="['monitor:schedule-job']"
+          v-permission="['monitor:schedule-job:add', 'monitor:schedule-job:edit']"
           type="primary"
           small
           @click="submitForm"

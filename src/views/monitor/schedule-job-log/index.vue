@@ -12,7 +12,7 @@
           </el-form>
         </div>
         <div class="action-container">
-          <el-button class="action-item" size="small" type="danger" @click="handleBatchDelete">删 除</el-button>
+          <el-button v-permission="['monitor:schedule-job-log:delete']" class="action-item" size="small" type="danger" @click="handleBatchDelete">删 除</el-button>
         </div>
       </el-header>
       <el-main>
@@ -54,7 +54,7 @@
             <el-table-column align="center" width="150px" label="操作">
               <template slot-scope="scope">
                 <div class="operate-container">
-                  <el-link class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
+                  <el-link v-permission="['monitor:schedule-job-log:delete']" class="operate-item" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-link>
                 </div>
               </template>
             </el-table-column>
@@ -77,11 +77,13 @@
 <script>
 import { page, del } from '@/api/system/schedule-job-log'
 import Pagination from '@/components/Pagination'
+import permission from '@/directive/permission/index.js'
 
 export default {
   components: {
     Pagination
   },
+  directives: { permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
