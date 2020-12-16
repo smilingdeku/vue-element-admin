@@ -48,6 +48,23 @@
         </el-form-item>
       </el-tooltip>
 
+      <el-form-item prop="captcha" class="captcha-input">
+        <span class="svg-container">
+          <svg-icon icon-class="captcha" />
+        </span>
+        <el-input
+          ref="captcha"
+          v-model="loginForm.captcha"
+          placeholder="验证码"
+          name="captcha"
+          type="text"
+          tabindex="1"
+          autocomplete="off"
+          @keyup.enter.native="handleLogin"
+        />
+      </el-form-item>
+      <span><img v-if="image" class="captcha-image" :src="image" @click="refreshCaptcha"></span>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
         {{ $t('login.logIn') }}
       </el-button>
@@ -84,6 +101,7 @@
 // import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './components/SocialSignin'
+import { get } from '@/api/common/captcha'
 
 export default {
   name: 'Login',
@@ -106,8 +124,11 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '123456'
+        password: '123456',
+        captchaKey: '',
+        captcha: ''
       },
+      image: '',
       loginRules: {
         // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         // password: [{ required: true, trigger: 'blur', validator: validatePassword }]
@@ -141,6 +162,7 @@ export default {
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
+    this.refreshCaptcha()
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
@@ -185,6 +207,14 @@ export default {
         }
         return acc
       }, {})
+    },
+    refreshCaptcha() {
+      get(1).then(res => {
+        if (res.code === 0) {
+          this.loginForm.captchaKey = res.data.key
+          this.image = res.data.image
+        }
+      })
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -286,6 +316,18 @@ $light_gray:#eee;
         margin-right: 16px;
       }
     }
+  }
+
+  .captcha-image {
+    height: 40px;
+    vertical-align:middle;
+    margin-left: 10px;
+    margin-bottom: 5px
+  }
+
+  .captcha-input {
+    display: inline-block;
+    width: 320px
   }
 
   .svg-container {
