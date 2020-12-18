@@ -323,8 +323,8 @@ $light_gray:#eee;
   .captcha-image {
     height: 40px;
     vertical-align:middle;
-    margin-left: 10px;
-    margin-bottom: 5px
+    margin-left: 15px;
+    margin-bottom: 2px
   }
 
   .captcha-input {
