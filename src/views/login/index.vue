@@ -48,22 +48,24 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-form-item prop="captcha" class="captcha-input">
-        <span class="svg-container">
-          <svg-icon icon-class="captcha" />
-        </span>
-        <el-input
-          ref="captcha"
-          v-model="loginForm.captcha"
-          placeholder="验证码"
-          name="captcha"
-          type="text"
-          tabindex="1"
-          autocomplete="off"
-          @keyup.enter.native="handleLogin"
-        />
-      </el-form-item>
-      <span><img v-if="image" class="captcha-image" :src="image" @click="refreshCaptcha"></span>
+      <div>
+        <el-form-item prop="captcha" class="captcha-input">
+          <span class="svg-container">
+            <svg-icon icon-class="captcha" />
+          </span>
+          <el-input
+            ref="captcha"
+            v-model="loginForm.captcha"
+            placeholder="验证码"
+            name="captcha"
+            type="text"
+            tabindex="1"
+            autocomplete="off"
+            @keyup.enter.native="handleLogin"
+          />
+        </el-form-item>
+        <span><img v-if="image" class="captcha-image" :src="image" @click="refreshCaptcha()"></span>
+      </div>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
         {{ $t('login.logIn') }}
@@ -327,7 +329,7 @@ $light_gray:#eee;
 
   .captcha-input {
     display: inline-block;
-    width: 320px
+    width: 70%;
   }
 
   .svg-container {
